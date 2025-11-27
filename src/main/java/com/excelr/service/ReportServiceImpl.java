@@ -13,6 +13,7 @@ import com.excelr.entity.CitizenPlan;
 
 import com.excelr.repository.CitizenPlanRepo;
 import com.excelr.request.SearchRequest;
+import com.excelr.util.EmailUtil;
 import com.excelr.util.ExcelGenerator;
 import com.excelr.util.PdfGenerator;
 
@@ -30,6 +31,8 @@ public class ReportServiceImpl implements ReportService{
 	@Autowired
 	private PdfGenerator pdfGenerator;
 	
+	@Autowired
+	private EmailUtil emailUtil;
 	
 	@Override
 	public List<String> getPlanNames(){
@@ -80,6 +83,15 @@ public class ReportServiceImpl implements ReportService{
 		File f=new File ("plans.xls");
 		List<CitizenPlan> plans=planRepo.findAll();
 		excelgenerator.generate(response, plans, f);
+		
+
+		String subject = "Test mail subject";
+		String body = "<h1>Test mail body </h1>";
+		String to = "rajeshallada@gmail.com";
+		
+		
+		emailUtil.sendEmail(subject, body, to, f);
+		
 		f.delete();
 		return true;
 	}
@@ -90,6 +102,13 @@ public class ReportServiceImpl implements ReportService{
         File f = new File("Plans.pdf");		
 		List<CitizenPlan> plans = planRepo.findAll();
 		pdfGenerator.generate(response, plans, f);
+		
+		String subject = "Test mail subject";
+		String body = "<h1>Test mail body </h1>";
+		String to = "rajeshallada@gmail.com";
+		
+		emailUtil.sendEmail(subject, body, to, f);
+
 		f.delete();
 		return true;
 	}
